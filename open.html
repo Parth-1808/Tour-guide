@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - ViGo - Virtual Go</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> <style>
+        /* Basic Reset & Body Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif; /* Default font */
+            line-height: 1.6;
+            /* No background-color here, set in opening interface for gradient */
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Opening Interface Styles */
+        #opening-interface {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); */ /* Original gradient */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  /* Stronger, more vibrant gradient */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 1.2s ease-out, visibility 1.2s ease-out; /* Slightly longer transition */
+        }
+
+        #opening-interface.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .opening-content {
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .opening-title {
+            font-family: 'Playfair Display', serif; /* Elegant title font */
+            font-size: 3.5rem; /* Larger title */
+            margin-bottom: 0.5em;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards, textShadow 2s ease-out alternate infinite; /* Added textShadow */
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+        }
+        @keyframes textShadow {
+          from { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); }
+          to   { text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.5); }
+        }
+
+
+        .opening-tagline {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 2em;
+            opacity: 0;
+            animation: fadeIn 1s 0.7s ease-in forwards; /* Delayed fade in */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .loader {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #fff;
+            width: 50px; /* Larger loader */
+            height: 50px;
+            margin: 1.5em auto 0;
+            animation: spin 1.2s linear infinite, fadeIn 1s 1.2s ease-in forwards; /* Longer spin */
+            opacity: 0;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Main Content Styles */
+        #main-content {
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in 0.8s; /* Slightly earlier transition */
+        }
+
+        #main-content.visible {
+            opacity: 1;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav ul li {
+            margin: 8px 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform */
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            background-color: #555;
+            transform: translateY(-2px);  /* Slight lift on hover */
+        }
+
+        main {
+            max-width: 1100px; /* Wider main section */
+            margin: 30px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px; /* More rounded corners */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* Stronger shadow */
+            text-align: center; /* Center-align main content */
+        }
+
+        main h1 {
+            font-family: 'Playfair Display', serif;
+            color: #2c3e50; /* Darker heading color */
+            margin-bottom: 0.75em;
+            font-size: 2.5rem; /* Slightly larger heading */
+            letter-spacing: -0.02em;
+        }
+
+        main p {
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 1.2em;
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+        }
+
+        main p:last-child {
+            margin-bottom: 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 25px;
+            color: #888;
+            font-size: 0.95em;
+            border-top: 1px solid #eee;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .opening-title {
+                font-size: 2.5rem;
+            }
+            .opening-tagline {
+                font-size: 1.1rem;
+            }
+            nav ul li {
+                margin: 8px 15px;
+            }
+            nav ul li a {
+                padding: 6px 12px;
+            }
+            main {
+                padding: 30px;
+            }
+             main h1{
+                font-size: 2.2rem
+            }
+        }
+
+        @media (max-width: 480px) {
+            .opening-title {
+                font-size: 2rem;
+            }
+            .opening-tagline {
+                font-size: 1rem;
+            }
+            nav ul {
+                justify-content: space-around;
+            }
+            nav ul li {
+                margin: 5px 5px;
+            }
+            nav ul li a {
+                padding: 5px 10px;
+            }
+             main h1{
+                font-size: 2rem
+            }
+        }
+
+        /* Chatbot Button Styles */
+        #chatbot-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px; /* Larger size */
+            height: 60px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Added transform */
+            display: flex; /* For centering the icon */
+            justify-content: center;
+            align-items: center;
+        }
+
+        #chatbot-button:hover {
+            background-color: #45a049;
+            transform: scale(1.1); /* Slight scale on hover */
+        }
+
+        .material-icons {
+            font-size: 36px; /* Larger icon */
+        }
+
+        /* Logo and Icon Styles */
+        .logo-placeholder {
+            width: 150px; /* Adjust as needed */
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .main-icon {
+            font-size: 80px; /* Adjust size as needed */
+            color: #007BFF; /* Example color */
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="opening-interface">
+        <div class="opening-content">
+            <h1 class="opening-title">ViGo</h1>
+            <p class="opening-tagline">Your Virtual Go Guide</p>
+            <div class="loader"></div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <header>
+            <nav>
+                
+            </nav>
+        </header>
+
+        <main>
+            <img src="logo4.gif" alt="Website Logo" class="logo-placeholder">
+            <i class="material-icons main-icon">travel_explore</i>
+            <h1>Explore the World with ViGo</h1>
+            <p>Embark on virtual journeys to the most breathtaking destinations across the globe.  ViGo brings you immersive experiences, expert insights, and curated tours, all from the comfort of your home.</p>
+            <p>Discover hidden gems, iconic landmarks, and vibrant cultures.  Our virtual tours are designed to inspire your wanderlust and expand your horizons.  Start your adventure today!</p>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 ViGo - Virtual Go. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <button id="chatbot-button">
+        <span class="material-icons">question_answer</span>
+    </button>
+
+    <script>
+        window.addEventListener('load', () => {
+            const openingInterface = document.getElementById('opening-interface');
+            const mainContent = document.getElementById('main-content');
+            const chatbotButton = document.getElementById('chatbot-button');
+
+            const displayDuration = 3500;
+
+            setTimeout(() => {
+                if (openingInterface) {
+                    openingInterface.classList.add('fade-out');
+                }
+
+                if (mainContent) {
+                    mainContent.classList.add('visible');
+                }
+            }, displayDuration);
+
+            // Open index.html when chatbot button is clicked
+            if (chatbotButton) {
+                chatbotButton.addEventListener('click', () => {
+                    window.location.href = 'index.html'; // Navigate to index.html
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>
